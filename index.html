@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8">
+  <title>Айалаға арналған</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(#ffe6f0, #fff);
+      color: #333;
+      text-align: center;
+    }
+    header {
+      padding: 60px 20px;
+    }
+    header h1 {
+      font-size: 36px;
+      color: #c2185b;
+    }
+    .gallery img {
+      width: 90%;
+      max-width: 300px;
+      margin: 10px;
+      border-radius: 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    .gallery img:hover {
+      transform: scale(1.05);
+    }
+    .section {
+      padding: 40px 20px;
+    }
+    .button {
+      padding: 15px 25px;
+      background: #ff4081;
+      border: none;
+      color: white;
+      font-size: 18px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .button:hover {
+      background: #f50057;
+    }
+
+    /* Popup compliment style */
+    #popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      background-color: #ffe6ec;
+      color: #c2185b;
+      padding: 20px 30px;
+      border-radius: 20px;
+      font-size: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      opacity: 0;
+      transition: all 0.4s ease;
+      z-index: 1000;
+    }
+
+    .hearts {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+
+    .poem {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #fff1f6;
+      border-left: 6px solid #ff4081;
+      padding: 20px;
+      border-radius: 12px;
+      font-style: italic;
+      font-size: 18px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      animation: fadeIn 2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Кім үшін екенін сен білесің... 🌹</h1>
+  <p>Сенімен бірге болған сәттер — мен үшін өмірімнің ең тәтті естелігіктері болғанын қалаймын.</p>
+</header>
+
+<div class="section gallery">
+  <h2>📸 Та самая принцесса</h2>
+
+  <img src="images/515.jpg" alt="Айала" onclick="showCompliment('Сенің күлкің – менің күн сәулем 🌞')">
+  <img src="images/516.jpg" alt="Айала" onclick="showCompliment('Сенің көзіңде – тұтас әлем бар 💫')">
+  <img src="images/517.jpg" alt="Айала" onclick="showCompliment('Мұндай сұлулық сирек кездеседі 🌷')">
+</div>
+
+<div class="section">
+  <h2>💌 "Кейіпкерім"</h2>
+  <div class="poem">
+    Әндерімнің ішіндегі сен кейіпкері, кейіпкері,<br>
+    Сені сүйіп талғамым биіктеді,<br>
+    Жансың маған, ақ періште, кейіптегі,<br>
+    Басқа жанға уақытымды, шабыт босқа қиып келдім.<br><br>
+
+    Ал сен келіп, махаббатты үйіп бердің,<br>
+    Сол үшін де, аман жүрші кейіпкерім.
+  </div>
+</div>
+
+<div class="section">
+  <button class="button" onclick="showHearts()">Сенсіз күндер – жай күндер 💖</button>
+</div>
+
+<!-- Compliment popup -->
+<div id="popup">❤️ Комплимент ❤️</div>
+
+<canvas class="hearts"></canvas>
+
+<script>
+function showCompliment(text) {
+  const popup = document.getElementById('popup');
+  popup.innerText = text;
+  popup.style.opacity = 1;
+  popup.style.transform = 'translate(-50%, -50%) scale(1)';
+
+  setTimeout(() => {
+    popup.style.opacity = 0;
+    popup.style.transform = 'translate(-50%, -50%) scale(0.9)';
+  }, 3000);
+}
+
+function showHearts() {
+  const canvas = document.querySelector('.hearts');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const hearts = [];
+  for (let i = 0; i < 30; i++) {
+    hearts.push({
+      x: Math.random() * canvas.width,
+      y: canvas.height + Math.random() * 100,
+      size: Math.random() * 20 + 10,
+      speed: Math.random() * 2 + 1,
+      opacity: Math.random()
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    hearts.forEach((heart) => {
+      ctx.globalAlpha = heart.opacity;
+      ctx.fillStyle = 'red';
+      ctx.beginPath();
+      ctx.moveTo(heart.x, heart.y);
+      ctx.bezierCurveTo(heart.x + heart.size / 2, heart.y - heart.size,
+                        heart.x + heart.size * 2, heart.y + heart.size / 2,
+                        heart.x, heart.y + heart.size * 2);
+      ctx.bezierCurveTo(heart.x - heart.size * 2, heart.y + heart.size / 2,
+                        heart.x - heart.size / 2, heart.y - heart.size,
+                        heart.x, heart.y);
+      ctx.fill();
+      heart.y -= heart.speed;
+      if (heart.y < -50) {
+        heart.y = canvas.height + Math.random() * 100;
+      }
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+</script>
+
+</body>
+</html>
